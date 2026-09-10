@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "settings",
+  "description": "Local settings panel events and hiding",
+  "windows": ["settings"],
+  "permissions": ["core:default", "core:window:allow-hide"]
+}

@@ -17,13 +17,23 @@ fn pointer_pressed() -> bool {
         false
     }
 }
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::{
     path::Path,
     sync::Mutex,
     time::{Duration, Instant},
 };
-use tauri::{Manager, PhysicalPosition, WebviewWindow, WindowEvent};
+use tauri::{Emitter, Manager, PhysicalPosition, WebviewWindow, WindowEvent};
+
+#[derive(Clone, Serialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+struct PointerPose {
+    x: f64,
+    y: f64,
+    window_x: f64,
+    window_y: f64,
+    pressed: bool,
+}
 
 #[derive(Clone, Deserialize)]
 pub struct HitArea {
@@ -131,6 +141,7 @@ pub fn setup(window: WebviewWindow, path: &Path) -> Result<(), String> {
         let mut moved_at = Instant::now();
         let mut dirty = false;
         let mut checked = Instant::now();
+        let mut last_pose = None;
         loop {
             std::thread::sleep(Duration::from_millis(32));
             let Ok(position) = window.outer_position() else {
@@ -162,9 +173,21 @@ pub fn setup(window: WebviewWindow, path: &Path) -> Result<(), String> {
                 checked = Instant::now();
             }
             if !window.is_visible().unwrap_or(false) {
+                last_pose = None;
                 continue;
             }
             if let (Ok(cursor), Ok(scale)) = (window.cursor_position(), window.scale_factor()) {
+                let pose = PointerPose {
+                    x: (cursor.x - position.x as f64) / scale,
+                    y: (cursor.y - position.y as f64) / scale,
+                    window_x: position.x as f64 / scale,
+                    window_y: position.y as f64 / scale,
+                    pressed: pointer_pressed(),
+                };
+                if last_pose.as_ref() != Some(&pose) {
+                    let _ = window.emit("pet-pointer", &pose);
+                    last_pose = Some(pose);
+                }
                 let state = window.state::<Interaction>();
                 let Ok(areas) = state.areas.lock() else {
                     continue;

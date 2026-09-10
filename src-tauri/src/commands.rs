@@ -14,16 +14,26 @@ pub fn runtime_status(state: State<'_, AppState>) -> Result<RuntimeStatus, Strin
 #[tauri::command]
 pub fn timer_snapshot(state: State<'_, AppState>) -> Result<Snapshot, String> {
     let mut timer = state.timer.lock().map_err(|e| e.to_string())?;
-    timer.tick(&state.database_path)?;
+    if state.system.blocked() {
+        timer.interrupt(&state.database_path, "system")?;
+    } else {
+        timer.tick(&state.database_path)?;
+    }
     Ok(timer.snapshot.clone())
 }
 #[tauri::command]
 pub fn timer_action(state: State<'_, AppState>, action: String) -> Result<Snapshot, String> {
+    apply_action(&state, &action)
+}
+pub fn apply_action(state: &AppState, action: &str) -> Result<Snapshot, String> {
+    if state.system.blocked() && matches!(action, "start" | "resume" | "next") {
+        return Err("系统仍在锁定或休眠，返回桌面后再继续吧。".into());
+    }
     state
         .timer
         .lock()
         .map_err(|e| e.to_string())?
-        .action(&state.database_path, &action)
+        .action(&state.database_path, action)
 }
 #[tauri::command]
 pub fn quit_app(app: tauri::AppHandle, state: State<'_, AppState>) -> Result<(), String> {
@@ -31,6 +41,7 @@ pub fn quit_app(app: tauri::AppHandle, state: State<'_, AppState>) -> Result<(),
     if timer.snapshot.status == crate::timer::Status::Running {
         timer.action(&state.database_path, "pause")?;
     }
+    drop(timer);
     app.exit(0);
     Ok(())
 }

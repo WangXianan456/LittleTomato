@@ -65,14 +65,17 @@ pub fn set_setting(path: &Path, key: &str, value: &str) -> Result<(), String> {
 mod tests {
     use super::*;
     fn path() -> std::path::PathBuf {
+        static NEXT_ID: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
         let dir = std::env::temp_dir().join(format!(
-            "tomato-migration-{}",
+            "tomato-migration-{}-{}-{}",
+            std::process::id(),
+            NEXT_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed),
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
                 .unwrap()
                 .as_nanos()
         ));
-        fs::create_dir_all(&dir).unwrap();
+        fs::create_dir(&dir).unwrap();
         dir.join("test.sqlite3")
     }
     #[test]

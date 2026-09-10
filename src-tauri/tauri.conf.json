@@ -24,6 +24,18 @@
         "shadow": false,
         "alwaysOnTop": true,
         "skipTaskbar": true
+      },
+      {
+        "label": "settings",
+        "title": "小番茄 · 设置",
+        "url": "index.html?view=settings",
+        "width": 720,
+        "height": 720,
+        "minWidth": 420,
+        "minHeight": 320,
+        "visible": false,
+        "center": true,
+        "resizable": true
       }
     ],
     "security": {

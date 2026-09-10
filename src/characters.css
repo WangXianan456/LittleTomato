@@ -1,0 +1,34 @@
+.pet-features { pointer-events: none; }
+.cheek { position: absolute; top: 78px; width: 22px; height: 10px; border-radius: 50%; background: #ffb5a2; opacity: .6; }
+.cheek-left { left: 22px; }.cheek-right { right: 22px; }
+.pet-crown, .pet-detail { display: none; position: absolute; }
+.tomato[data-character="peach"] { border-radius: 48% 48% 48% 48% / 43% 43% 58% 58%; background: radial-gradient(ellipse at 30% 24%, #fff0d8 0, transparent 36%), linear-gradient(135deg, #ffd2b5, #f78da1 62%, #e5698e); box-shadow: inset -8px -10px 20px #be4d6a22, 0 13px 20px #8c516e26; }
+[data-character="peach"] .leaf-left { display: none; }
+[data-character="peach"] .leaf-center { width: 38px; height: 25px; top: -13px; background: #78ad72; }
+[data-character="peach"] .leaf-right { width: 44px; height: 26px; top: -13px; background: linear-gradient(135deg,#a2ce7d,#5caa79); }
+[data-character="peach"] .arm { background: #f098a5; }[data-character="peach"] .foot { background: #c57885; }
+[data-character="peach"] .pet-detail { display: block; top: 9px; left: 69px; height: 28px; width: 12px; border-left: 2px solid #d6658544; border-radius: 50%; transform: rotate(12deg); }
+.tomato[data-character="sprout"] { border-radius: 48% 48% 38% 38%; background: radial-gradient(ellipse at 30% 20%,#eef6b9,transparent 42%), linear-gradient(145deg,#bfd98b,#7cb984 65%,#519982); box-shadow: inset -8px -10px 20px #35755622,0 13px 20px #49795826; }
+[data-character="sprout"] .leaf-center { width: 8px; height: 26px; left: 69px; top: -24px; border-radius: 9px; transform: rotate(4deg); background: #53805b; }
+[data-character="sprout"] .leaf-left { width: 36px; height: 23px; top: -26px; transform: translateX(-30px) rotate(30deg); background: linear-gradient(130deg,#a9d678,#598f5c); }
+[data-character="sprout"] .leaf-right { width: 37px; height: 24px; top: -29px; transform: translateX(0) rotate(-18deg); }
+[data-character="sprout"] .arm { background: #79af7c; }[data-character="sprout"] .foot { background: #537f67; }
+[data-character="sprout"] .eye { background: #35594c; }[data-character="sprout"] .mouth { border-bottom-color: #35594c; }
+[data-character="sprout"] .pet-detail { display: block; width: 60px; height: 15px; left: 41px; bottom: 10px; border-bottom: 2px dashed #f0edbf99; border-radius: 50%; }
+.tomato[data-character="cloud"] { border-radius: 48% 48% 42% 42%; background: radial-gradient(ellipse at 30% 20%,#fff 5%,transparent 55%),linear-gradient(150deg,#f7fcff,#d1e9f5 65%,#a7c9e7); box-shadow: inset -8px -10px 20px #789dc022,0 13px 20px #6b8da226; }
+[data-character="cloud"] .leaf { display: none; }
+[data-character="cloud"] .pet-crown { display: block; border-radius: 50%; background: #f4fbff; z-index: -1; }
+[data-character="cloud"] .crown-left { width: 67px; height: 57px; top: -19px; left: 18px; }
+[data-character="cloud"] .crown-right { width: 55px; height: 45px; top: -8px; right: 8px; background: #e8f5fc; }
+[data-character="cloud"] .arm { background: #d2e7f5; }[data-character="cloud"] .foot { background: #91b8d5; }
+[data-character="cloud"] .eye { background: #4c647f; }[data-character="cloud"] .mouth { border-bottom-color: #4c647f; }
+[data-character="cloud"] .cheek { background: #e6a8bd; }
+.tomato[data-character="cat"] { border-radius: 43% 43% 47% 47%; background: radial-gradient(ellipse at 32% 25%,#fff9e9,transparent 48%),linear-gradient(145deg,#f9e7c2,#ebc994 70%,#d5ad7a); box-shadow: inset -8px -10px 20px #98714e22,0 13px 20px #8d725526; }
+[data-character="cat"] .leaf { display: none; }
+[data-character="cat"] .pet-crown { display: block; width: 48px; height: 53px; top: -23px; background: #f0d7aa; border: 10px solid #f0d7aa; border-radius: 10px 80% 10px 10px; z-index: -1; box-shadow: inset 0 0 0 20px #dca7a0; }
+[data-character="cat"] .crown-left { left: 3px; transform: rotate(-12deg); }
+[data-character="cat"] .crown-right { right: 3px; transform: scaleX(-1) rotate(-12deg); }
+[data-character="cat"] .arm { background: #e2be89; }[data-character="cat"] .foot { background: #b89269; }
+[data-character="cat"] .pet-detail { display: block; width: 10px; height: 7px; left: 66px; top: 79px; background: #b77973; border-radius: 40% 40% 65% 65%; }
+[data-character="cat"] .cheek { height: 8px; border-top: 2px solid #9d795955; border-bottom: 2px solid #9d795955; background: transparent; border-radius: 0; }
+[data-character="sprout"]:hover .leaf-center { animation: none; }

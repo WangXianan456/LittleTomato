@@ -78,6 +78,7 @@ button {
 
 .tomato {
   position: relative;
+  isolation: isolate;
   width: 142px;
   height: 132px;
   flex: none;
@@ -387,3 +388,14 @@ button:focus-visible { outline: 3px solid #79602c; outline-offset: 3px; }
 button:disabled { opacity: .6; cursor: wait; }
 .quit-dialog { position: absolute; bottom: 22px; width: 264px; padding: 18px; border-radius: 20px; background: #fff8e8; box-shadow: 0 5px 25px #57352f44; z-index: 5; font-size: 14px; }
 .quit-dialog button { border: 0; border-radius: 10px; padding: 8px; margin-right: 6px; background: #f3dfcb; color: #57352f; cursor: pointer; }
+
+.pet-window .tomato { zoom: var(--pet-scale, 1); }
+.pet-window .speech-bubble { margin-bottom: calc(42px * var(--pet-scale, 1)); }
+.reduce-motion *, .reduce-motion *::before, .reduce-motion *::after { animation: none !important; transition: none !important; }
+.settings-entry { display: inline-flex; gap: 3px; align-items: center; padding: 0 2px; border: 0; background: transparent; color: inherit; font-size: 10px; line-height: 12px; cursor: pointer; }
+.pet-window[data-theme="dark"] .speech-bubble, .pet-window[data-theme="dark"] .timer-card, .pet-window[data-theme="dark"] .runtime-status, .pet-window[data-theme="dark"] .quit-dialog { background: #302e2a; color: #f8ead9; border-color: #5e5144; text-shadow: none; }
+.pet-window[data-theme="dark"] .timer-state, .pet-window[data-theme="dark"] .timer-copy strong { color: #f8ead9; }
+.pet-window[data-theme="dark"] .speech-tail { background: #302e2a; border-color: #5e5144; }
+
+/* Keep the pet anchored while removing chrome from paint, focus and hit testing. */
+.pet-window.is-compact :is(.speech-bubble, .timer-card, .runtime-status) { visibility: hidden; pointer-events: none; }

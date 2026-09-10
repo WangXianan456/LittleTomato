@@ -6,7 +6,17 @@
   elapsedMs: number;
   rounds: number;
   recovery: boolean;
+  recoveryReason?: string | null;
 };
+export function recoveryMessage(reason?: string | null) {
+  switch (reason) {
+    case "locked": return "锁屏前的进度已保存，继续吗？";
+    case "sleep": return "欢迎回来，休眠前的计时还在。";
+    case "disconnected": return "连接回来啦，要继续计时吗？";
+    case "unresponsive": return "刚才暂停了一下，准备好再继续。";
+    default: return "上次的计时还在，继续吗？";
+  }
+}
 export function formatTime(seconds: number) {
   const value = Math.max(0, Math.ceil(seconds));
   return `${Math.floor(value / 60).toString().padStart(2, "0")}:${(value % 60).toString().padStart(2, "0")}`;
