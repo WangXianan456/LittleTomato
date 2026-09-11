@@ -53,6 +53,16 @@ pub enum Character {
     Sprout,
     Cloud,
     Cat,
+    Pikachu,
+    Doraemon,
+    Totoro,
+    Kirby,
+    HelloKitty,
+    Shinchan,
+    Spongebob,
+    Cinnamoroll,
+    Kuromi,
+    Pooh,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -237,7 +247,23 @@ mod tests {
     }
     #[test]
     fn character_settings_roundtrip_and_reject_unknown_character() {
-        for id in ["tomato", "peach", "sprout", "cloud", "cat"] {
+        for id in [
+            "tomato",
+            "peach",
+            "sprout",
+            "cloud",
+            "cat",
+            "pikachu",
+            "doraemon",
+            "totoro",
+            "kirby",
+            "hello_kitty",
+            "shinchan",
+            "spongebob",
+            "cinnamoroll",
+            "kuromi",
+            "pooh",
+        ] {
             let json = format!(r#"{{"character":"{id}"}}"#);
             let settings: Settings = serde_json::from_str(&json).unwrap();
             assert_eq!(serde_json::to_value(&settings).unwrap()["character"], id);

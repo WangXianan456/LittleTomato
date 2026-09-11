@@ -101,6 +101,9 @@ function Main-Control([string]$name) {
 function Toggle-Details {
     $root=[System.Windows.Automation.AutomationElement]::FromHandle($script:window)
     $pet=$root.FindAll([System.Windows.Automation.TreeScope]::Descendants,(New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty,[System.Windows.Automation.ControlType]::Button))) | Where-Object {$_.Current.Name -like '和*说话；按住拖动可移动'} | Select-Object -First 1
+    # Activate the control before double-clicking; an editor popup can otherwise consume the first click.
+    $pet.SetFocus()
+    Start-Sleep -Milliseconds 250
     $r=$pet.Current.BoundingRectangle
     [TomatoSmoke]::SetCursorPos([int]($r.X+$r.Width/2),[int]($r.Y+$r.Height/2)) | Out-Null
     Start-Sleep -Milliseconds 250
@@ -276,7 +279,7 @@ db.exec('PRAGMA busy_timeout=5000'); console.log(db.prepare("SELECT value FROM s
         Assert-True ((Read-Settings).focusMinutes -eq 40) 'UI saves custom focus duration to SQLite'
         Assert-True ((Read-Snapshot).plannedSeconds -eq 1500) 'Settings leave paused timer plan unchanged'
         Press-Button '伙伴小屋'
-        foreach ($character in @(@('peach','蜜桃桃'), @('sprout','芽芽'), @('cloud','云朵'), @('cat','奶油猫'))) {
+        foreach ($character in @(@('peach','蜜桃桃'), @('sprout','芽芽'), @('cloud','云朵'), @('pikachu','皮卡丘'), @('doraemon','哆啦 A 梦'), @('totoro','龙猫'), @('kirby','卡比'), @('hello_kitty','Hello Kitty'), @('cat','奶油猫'))) {
             Press-Button $character[1]
             Press-Button '保存设置'
             Assert-True ((Read-Settings).character -eq $character[0]) "Character persists: $($character[0])"
@@ -432,6 +435,26 @@ db.exec('PRAGMA busy_timeout=5000'); console.log(db.prepare("SELECT value FROM s
         Press-PetControl '收起信息栏'
         Assert-True ($null -eq (Main-Control '计时器') -and $null -eq (Main-Control '打开互动')) 'Collapse button returns to pet only'
         Save-PetImage 'pet-only.png'
+        foreach ($cartoon in @(@('shinchan','小新','嘿嘿，被摸得美滋滋的。'), @('spongebob','海绵宝宝','咯咯咯，痒痒的，别停呀。'), @('cinnamoroll','玉桂狗','耳朵扇一扇，好运飞过来。'), @('kuromi','库洛米','哼，才、才没有很开心呢。'), @('pooh','维尼熊','软软的，像刚刚好的蜂蜜。'), @('pikachu','皮卡丘','皮卡皮卡！收到你的好心情。'), @('doraemon','哆啦 A 梦','这份温暖，收进口袋里啦。'), @('totoro','龙猫','软软的肚子，借你靠一会儿。'), @('kirby','卡比','啵哟！快乐像星星一样冒出来。'), @('hello_kitty','Hello Kitty','把这份温柔系成一个蝴蝶结。'))) {
+            Click-SettingsEntry
+            Press-Button '伙伴小屋'
+            $filter=Find-Control ([System.Windows.Automation.ControlType]::Button) '卡通伙伴'
+            if ($filter.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Current.ToggleState -ne [System.Windows.Automation.ToggleState]::On) { Press-Button '卡通伙伴' }
+            Press-Button $cartoon[1]
+            Press-Button '保存设置'
+            Press-Button '取消'
+            Start-Sleep -Milliseconds 600
+            Press-PetControl "和$($cartoon[1])说话；按住拖动可移动"
+            Assert-True ($null -ne (Find-PetControl $cartoon[2])) "Cartoon pet responds to real click: $($cartoon[0])"
+            Start-Sleep -Milliseconds 2400
+            Save-PetImage "cartoon-$($cartoon[0]).png"
+            Press-PetControl '收起信息栏'
+        }
+        Stop-Process -Id $first.Id; $first.WaitForExit()
+        $first=Start-Process -FilePath $Executable -WindowStyle Hidden -PassThru
+        Start-Sleep -Seconds 3
+        $first.Refresh(); $script:window=$first.MainWindowHandle
+        Assert-True ((Read-Settings).character -eq 'hello_kitty' -and $null -ne (Find-PetControl '和Hello Kitty说话；按住拖动可移动')) 'Cartoon selection survives restart in pet-only mode'
     }
     Write-Output "Evidence: $env:LITTLE_TOMATO_RUNTIME_DIR"
 } finally {

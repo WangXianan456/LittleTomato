@@ -1,0 +1,48 @@
+/* Independent silhouettes redrawn against the official references in docs. */
+.tomato:is([data-character="pikachu"],[data-character="doraemon"],[data-character="totoro"],[data-character="kirby"],[data-character="hello_kitty"],[data-character="shinchan"],[data-character="spongebob"],[data-character="cinnamoroll"],[data-character="kuromi"],[data-character="pooh"]),
+.pet-window .pet-stage .tomato:is([data-character="pikachu"],[data-character="doraemon"],[data-character="totoro"],[data-character="kirby"],[data-character="hello_kitty"],[data-character="shinchan"],[data-character="spongebob"],[data-character="cinnamoroll"],[data-character="kuromi"],[data-character="pooh"]) { background: none; border-radius: 0; box-shadow: none; }
+.reference-character { position: absolute; left: -17px; top: -48px; width: 176px; height: 190px; overflow: visible; filter: drop-shadow(0 5px 3px #29303b24); --arm-origin: 140px 130px; }
+.reference-hit { position: absolute; left: -17px; top: -48px; width: 176px; height: 190px; border-radius: 18px; }
+.reference-character[data-rig="totoro"] { --arm-origin: 151px 113px; }
+/* Paper-doll rigs over official-art cutouts: one scaled stage, layered body
+   parts, and an eye overlay wired to the shared gaze/blink/happy states. */
+.stock-rig { overflow: visible; }
+.stock-rig-inner { position: absolute; transform-origin: 0 0; }
+.stock-rig-inner img { position: absolute; pointer-events: none; }
+.stock-eyes { position: absolute; left: 0; top: 0; overflow: visible; }
+.stock-rig .rig-eye { animation: none; }
+.stock-rig .rig-pupil { translate: calc(var(--gaze-x, 0px) * var(--gaze-k, 1)) calc(var(--gaze-y, 0px) * var(--gaze-k, 1)); }
+.stock-lid { transform-box: fill-box; transform-origin: 50% 12%; animation: stock-blink 5.3s infinite; }
+.stock-lids .stock-lid:nth-child(2) { animation-delay: .06s; }
+@keyframes stock-blink { 0%, 91.5%, 96%, 100% { transform: scaleY(0); } 93.5%, 95% { transform: scaleY(1); } }
+.tomato:is([data-reaction="pet"],[data-mood="celebrate"],[data-mood="rest"]) .stock-lid { animation: none; transform: scaleY(1); }
+.reduce-motion .stock-lid { animation: none; }
+@media(prefers-reduced-motion: reduce) { .stock-lid { animation: none; } }
+.reference-character .rig-pupil { translate: var(--gaze-x, 0px) var(--gaze-y, 0px); }
+.reference-character .rig-eye { transform-box: fill-box; transform-origin: center; animation: blink 5s infinite; }
+.reference-character .rig-happy-eyes { display: none; }
+.tomato:is([data-reaction="pet"],[data-mood="celebrate"],[data-mood="rest"]) .rig-eye { visibility: hidden; }
+.tomato:is([data-reaction="pet"],[data-mood="celebrate"],[data-mood="rest"]) .rig-happy-eyes { display: block; }
+.rig-arm-right { transform-origin: var(--arm-origin); }
+.tomato[data-reaction="wave"] .rig-arm-right { animation: reference-wave .6s ease-in-out 3; }
+.tomato[data-reaction="stretch"] .rig-arm-right { animation: reference-stretch 1.8s ease-in-out; }
+.tomato[data-reaction="pet"] .rig-ear { transform-origin: 100px 50px; animation: reference-ear .5s ease-in-out 3; }
+.tomato[data-reaction="pet"] .rig-bow { transform-origin: 142px 42px; animation: reference-ear .5s ease-in-out 3; }
+.pet-stage[data-lifted="true"] .reference-character { filter: drop-shadow(0 12px 5px #29303b30); }
+.pet-stage[data-lifted="true"] .rig-arm-right { transform: rotate(-15deg); }
+.pet-stage[data-lifted="true"] .rig-foot { translate: 0 3px; }
+@keyframes reference-wave { 0%,100% { rotate: 0deg; } 50% { rotate: -24deg; } }
+@keyframes reference-stretch { 0%,100% { rotate: 0deg; } 45%,65% { rotate: -32deg; } }
+@keyframes reference-ear { 0%,100% { rotate: 0deg; } 50% { rotate: 6deg; } }
+.reduce-motion .rig-pupil { translate: none; }
+.reduce-motion .pet-stage[data-lifted="true"] :is(.rig-arm-right,.rig-foot) { transform: none; translate: none; }
+@media(prefers-reduced-motion: reduce) { .reference-character .rig-pupil { translate: none; }.pet-stage[data-lifted="true"] :is(.rig-arm-right,.rig-foot) { transform: none; translate: none; } }
+.character-art[data-palette="pikachu"] { background: radial-gradient(ellipse at 50% 40%,#fffbea,#f4e7bd); }
+.character-art[data-palette="doraemon"] { background: radial-gradient(ellipse at 50% 40%,#eefbff,#d1e7f2); }
+.character-art[data-palette="totoro"] { background: radial-gradient(ellipse at 50% 40%,#f1f3e6,#dce5d5); }
+.character-art:is([data-palette="kirby"],[data-palette="hello_kitty"]) { background: radial-gradient(ellipse at 50% 40%,#fff4f7,#f3dce6); }
+.character-art[data-palette="shinchan"] { background: radial-gradient(ellipse at 50% 40%,#fff6ee,#f6ddd0); }
+.character-art[data-palette="spongebob"] { background: radial-gradient(ellipse at 50% 40%,#fffbe0,#f2e6ad); }
+.character-art[data-palette="cinnamoroll"] { background: radial-gradient(ellipse at 50% 40%,#fbfdff,#dcebf7); }
+.character-art[data-palette="kuromi"] { background: radial-gradient(ellipse at 50% 40%,#f7f4fb,#e2dcef); }
+.character-art[data-palette="pooh"] { background: radial-gradient(ellipse at 50% 40%,#fff8e4,#f3e2b8); }

@@ -86,41 +86,43 @@ pub fn set_hit_areas(
 pub fn place(window: &WebviewWindow, saved: Option<(i32, i32)>) -> tauri::Result<()> {
     let monitors = window.available_monitors()?;
     let size = window.outer_size()?;
-    let monitor = saved
-        .and_then(|(x, y)| {
-            monitors.iter().find(|m| {
-                let a = m.work_area();
-                x >= a.position.x
-                    && y >= a.position.y
-                    && x < a.position.x + a.size.width as i32
-                    && y < a.position.y + a.size.height as i32
-            })
-        })
-        .cloned()
-        .or(window.primary_monitor()?);
-    if let Some(monitor) = monitor {
-        let a = monitor.work_area();
-        let margin = (12.0 * monitor.scale_factor()) as i32;
-        let min_x = a.position.x + margin;
-        let min_y = a.position.y + margin;
-        let max_x = (a.position.x + a.size.width as i32 - size.width as i32 - margin).max(min_x);
-        let max_y = (a.position.y + a.size.height as i32 - size.height as i32 - margin).max(min_y);
-        let (x, y) = saved.unwrap_or((max_x, max_y));
-        let snap = |v: i32, lo: i32, hi: i32| {
-            let v = v.clamp(lo, hi);
-            if v - lo < margin {
-                lo
-            } else if hi - v < margin {
-                hi
-            } else {
-                v
-            }
-        };
-        window.set_position(PhysicalPosition::new(
-            snap(x, min_x, max_x),
-            snap(y, min_y, max_y),
-        ))?;
+    if monitors.is_empty() {
+        return Ok(());
     }
+    // The pet stays wherever it is dropped, edges included. The only guard
+    // rail keeps a small strip on the desktop so it can never be lost past
+    // the last monitor; there is no margin and no edge snapping.
+    const KEEP: i32 = 24;
+    let (mut min_x, mut min_y, mut max_x, mut max_y) = (i32::MAX, i32::MAX, i32::MIN, i32::MIN);
+    for m in &monitors {
+        let a = m.work_area();
+        min_x = min_x.min(a.position.x);
+        min_y = min_y.min(a.position.y);
+        max_x = max_x.max(a.position.x + a.size.width as i32);
+        max_y = max_y.max(a.position.y + a.size.height as i32);
+    }
+    let (x, y) = match saved {
+        Some((x, y)) => (x, y),
+        None => {
+            let primary = window.primary_monitor()?;
+            let fallback = monitors.first().map(|m| m.work_area());
+            let a = match primary.as_ref().map(|m| m.work_area()) {
+                Some(a) => a,
+                None => match fallback {
+                    Some(a) => a,
+                    None => return Ok(()),
+                },
+            };
+            let margin = (12.0 * window.scale_factor().unwrap_or(1.0)) as i32;
+            (
+                a.position.x + a.size.width as i32 - size.width as i32 - margin,
+                a.position.y + a.size.height as i32 - size.height as i32 - margin,
+            )
+        }
+    };
+    let x = x.clamp(min_x - size.width as i32 + KEEP, max_x - KEEP);
+    let y = y.clamp(min_y - size.height as i32 + KEEP, max_y - KEEP);
+    window.set_position(PhysicalPosition::new(x, y))?;
     Ok(())
 }
 pub fn setup(window: WebviewWindow, path: &Path) -> Result<(), String> {

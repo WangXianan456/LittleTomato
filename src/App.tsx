@@ -5,7 +5,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { formatTime, primaryAction, phaseLabel, recoveryMessage, type Snapshot } from "./timer";
 import "./App.css";
 import PetFeatures from "./PetFeatures";
-import { getCharacter } from "./characters";
+import { getCharacter, cartoonIds } from "./characters";
 import { defaultSettings, type Settings } from "./settings";
 import { useColorTheme } from "./appearance";
 import ConfirmDialog from "./ConfirmDialog";
@@ -80,7 +80,7 @@ function App() {
     const update = () => {
       const areas = Array.from(root.current?.querySelectorAll<HTMLElement>("[data-hit]") ?? []).filter(el => getComputedStyle(el).visibility !== "hidden").map(el => {
         const r = el.getBoundingClientRect();
-        return { x: r.x, y: r.y, width: r.width, height: r.height, radius: (Number(el.dataset.hit) || 0) * (el.classList.contains("pet-stage") ? settings.petSize / 160 : 1) };
+        return { x: r.x, y: r.y, width: r.width, height: r.height, radius: (Number(el.dataset.hit) || 0) * (el.classList.contains("pet-stage") || el.classList.contains("reference-hit") ? settings.petSize / 160 : 1) };
       });
       void invoke("set_hit_areas", { areas }).catch(() => setError(true));
     };
@@ -144,7 +144,8 @@ function App() {
         onContextMenu={e => { e.preventDefault(); setInteractionOpen(true); }}
         onDoubleClick={() => { if (performance.now() - lastDrag.current > 400) { setExpanded(value => !value); setInteractionOpen(false); } }}
         onClick={e => { if (e.detail === 0) { setExpanded(value => !value); setInteractionOpen(false); } else if (e.detail === 1 && !drag.current?.moved) interact("pet"); drag.current = null; }}>
-        <span className="pet-depth"><span className={`tomato ${petMood(timer) === "focus" ? "is-focusing" : ""}`} data-character={character.id} data-mood={petMood(timer)} data-reaction={reaction ?? undefined}><PetFeatures />
+        {cartoonIds.includes(character.id) && <span className="reference-hit" data-hit="18" aria-hidden="true" />}
+        <span className="pet-depth"><span className={`tomato ${petMood(timer) === "focus" ? "is-focusing" : ""}`} data-character={character.id} data-mood={petMood(timer)} data-reaction={reaction ?? undefined}><PetFeatures character={character.id} />
         {reaction && <span className="pet-sparkles" aria-hidden="true"><i>♡</i><i>✦</i><i>♡</i></span>}
         </span></span>
       </button>

@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local reference copies and overnight task state
+preview-refs/
+.overnight-lock
+OVERNIGHT_LOG.md

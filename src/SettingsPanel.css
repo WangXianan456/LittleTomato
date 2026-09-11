@@ -57,4 +57,7 @@
 [aria-pressed="true"] .character-check { color: var(--page); background: var(--accent); border-color: var(--accent); }
 .character-subtitle { display: block; margin: 0 7px; color: var(--muted); font-size: 10px; line-height: 1.6; }
 .character-hint { color: var(--muted); font-size: 11px; line-height: 1.8; margin-top: 18px; }
+.collection-filter { display: flex; flex-wrap: wrap; gap: 7px; margin: -7px 0 18px; }
+.collection-filter button { border: 1px solid var(--line); padding: 7px 10px; border-radius: 20px; font-size: 11px; color: var(--muted); background: var(--card); cursor: pointer; }
+.collection-filter button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--soft); }
 @media(max-width:560px) { .settings-nav { flex-wrap: wrap; }.settings-nav button { flex: 1 0 42%; }.character-art { height: 130px; } }

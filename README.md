@@ -2,7 +2,25 @@
 
 一个温柔提醒你专注与休息的 Windows 桌面小宠物。
 
+## 🍅 下载使用
+
+[![下载最新版](https://img.shields.io/badge/下载-Windows_x64_便携版-c0392b)](https://github.com/WangXianan456/LittleTomato/releases/latest/download/LittleTomato-windows-x64-portable.zip) ／ 直达：[Releases · 最新版本](https://github.com/WangXianan456/LittleTomato/releases/latest)
+
+1. 从 [Releases](https://github.com/WangXianan456/LittleTomato/releases/latest) 下载 `LittleTomato-windows-x64-portable.zip`；
+2. 解压后运行 `小番茄/little-tomato.exe`（免安装；设置和计时记录保存在本机用户数据目录）；
+3. 双击桌宠展开信息栏，底部"设置"里挑选伙伴、配置专注节奏。
+
+系统要求：Windows 10（2004+）或 Windows 11 x64，需安装 Microsoft WebView2（大多数设备已预装）。若首次启动无反应，安装 [WebView2 运行时](https://developer.microsoft.com/microsoft-edge/webview2/) 即可。
+
+此版本未进行代码签名，Windows 可能显示未知发布者提示。
+
+> 使用提示：按住拖动可移动（可以贴边放置）；单击摸摸、右键打开互动；托盘图标可隐藏/退出。
+
 ## 当前状态
+
+现有十个非官方 Q 版卡通角色：皮卡丘、哆啦 A 梦、龙猫、卡比、Hello Kitty、小新、海绵宝宝、玉桂狗、库洛米和维尼熊。双击桌宠 → 设置 → 伙伴小屋 → 卡通伙伴，选择并保存。角色共用立体晃动、拖动和互动能力，日常仍默认只显示宠物。
+
+卡通伙伴分两类实现：龙猫依据官方剧照核验后独立重绘为全身 SVG，保留眼睛跟随、眨眼、挥手等绑定动画，见 [官方参考核验](docs/2026-09-10-character-references.md)；其余九位应用官方图片抠像素材（`src/assets/characters/`），并按"纸偶骨架"方式把手臂、脚、耳朵切成独立图层，身体缺口做修补，复用同一套挥手、伸懒腰、摸摸、拖起与眼睛跟随动画，见 [官方素材抠像与骨架记录](docs/2026-09-10-stock-character-art.md)。抠像素材来源与使用边界见同文档。
 
 默认仅显示小宠物。双击桌宠展开对话气泡、计时卡与底栏；再次双击、点击“收起”或按 Esc 可隐藏这些信息。收起后继续计时，透明空白区域不会拦截鼠标。键盘聚焦宠物后可用 Enter/空格切换显示。
 
@@ -59,3 +77,5 @@ npm run tauri dev
 ## License
 
 程序代码计划采用 MIT License。小番茄角色名称与美术资产保留版权。
+
+卡通角色名称和角色形象权利属于各自权利人；程序代码许可证不授予这些角色的相关权利，开源或非商用不等于获得角色授权。龙猫为项目内非官方同人化重绘；皮卡丘、哆啦 A 梦、卡比、Hello Kitty、小新、海绵宝宝、玉桂狗、库洛米、维尼熊九位直接内嵌了各自官方图片的抠像素材（见 [官方素材抠像与骨架记录](docs/2026-09-10-stock-character-art.md)），这些图片文件不属于 MIT 许可范围，仅限本机个人使用，请勿单独提取、再分发或商用。
